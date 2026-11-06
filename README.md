@@ -65,10 +65,40 @@ requirements.txt    Python dependencies
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-python src/build_graph.py 2019 2020 2024
+jupyter notebook notebooks/analysis.ipynb      # the whole analysis, in defence order (~5 min)
 ```
 
-The data extracts are versioned; `python src/fetch_data.py` downloads them again from Eurostat and OurAirports.
+Each module can also be run on its own and writes its tables to `results/`:
+
+```bash
+python src/build_graph.py 2019 2020 2024   # graph summaries
+python src/core_metrics.py          # size, connectivity, diameter/radius, articulation points
+python src/centrality.py            # degree, strength, betweenness, harmonic, PageRank
+python src/views.py                 # international vs domestic network
+python src/null_model.py            # degree-preserving null model (500 random graphs, ~2.5 min)
+python src/resilience.py            # 2019, 2020, 2024 (~1 min)
+python src/communities.py           # 2019, 2020, 2024
+python src/comparison.py            # 2019 / 2020 / 2024
+python src/source_comparison.py     # Eurostat vs DGAC published routes (~2 min)
+python src/figures.py               # report figures (~1 min)
+python src/network_map.py           # maps
+python src/time_series.py           # exploratory: 2010-2024
+```
+
+The data extracts are versioned; `python src/fetch_data.py` downloads them again from Eurostat and OurAirports (Eurostat revises its tables, so a new download can differ slightly).
+
+Requires Python 3.11+. The results in `results/` were produced in a clean virtual environment from `requirements.txt` with Python 3.12, NetworkX 3.7, pandas 3.1, SciPy and Matplotlib 3.11. Randomised steps use fixed seeds (Louvain `seed=42`, random removals seeds 0-99, null model seed 42) and graphs are built in a fixed order, so a rerun gives the same tables. Louvain's implementation can change between NetworkX versions: with another version, stability scores and small communities can differ slightly. Figures can differ cosmetically (fonts) from one machine to another.
+
+## Main results (2024)
+
+- **Centralised on CDG**: 179 of 836 routes, 43 % of passengers, betweenness 0.65 (Orly 0.14, Bâle-Mulhouse 0.12, Beauvais 0.11); with Orly, the centre of the network.
+- **International, long-haul centralisation**: CDG carries 45 % of international passengers but 91 % of long-haul passengers, and 76 foreign destinations are reachable only through CDG.
+- **Two Paris hubs domestically**: the domestic network is decentralised (betweenness centralisation 0.24 vs 0.65); CDG has the most domestic routes, Orly the most domestic passengers.
+- **More than a degree effect**: in degree-preserving random graphs CDG's betweenness is 0.59 (real 0.65, z = 7.4); the network is more hub-and-spoke than chance.
+- **Robust yet fragile**: removing CDG leaves 71 % of the airports in the main component and 57 % of the passengers on surviving routes (CDG + Orly: 65 % and 38 %), against 99.6 % and 99 % for one random removal.
+- **Communities follow business models**: CDG's international group, Orly and the regional airports, a low-cost group (Bâle-Mulhouse, Beauvais), Nice-Bordeaux, the Indian Ocean (modularity 0.28).
+- **Slowly less concentrated**: from 2010 to 2024 the Paris share of passengers fell from 70 % to 62 %; COVID lowered CDG's betweenness (0.70 in 2019, 0.63 in 2020, 0.65 in 2024). Traffic is back to its 2019 level (154.7 M vs 155.6 M).
+- **Why Eurostat**: the DGAC published routes capture 43 % of the airports' traffic (Eurostat 89 %); with them, CDG's centrality looks like a pure degree effect and COVID seems to have reinforced CDG, two conclusions that do not hold on the complete data.
 
 ## Team workflow
 
