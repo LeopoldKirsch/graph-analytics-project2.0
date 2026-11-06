@@ -1,0 +1,4 @@
+band,routes,destinations,passengers,cdg_routes,cdg_passenger_share,destinations_only_via_cdg
+"short (<1,500 km)",449,119,78194111,57,0.3244777602241683,11
+"medium (1,500-4,000 km)",155,60,23535782,26,0.34809516845456845,5
+"long (>4,000 km)",96,77,27746632,75,0.9069834854190592,60
