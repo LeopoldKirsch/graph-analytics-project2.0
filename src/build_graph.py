@@ -190,6 +190,43 @@ def build_graph(year: int = MAIN_YEAR, data_dir: Path = DATA_DIR) -> nx.Graph:
     return G
 
 
+def build_dgac_graph(year: int, data_dir: Path = DATA_DIR) -> nx.Graph:
+    """Same model built from the DGAC airport-pair series (only for source_comparison.py).
+
+    DGAC publishes a route-month only with >= 3 airlines and none above 85 %
+    of the traffic, so single-airline routes are missing. Available years:
+    2019, 2020, 2024 (data/raw/pap).
+    """
+    pap = _read_dgac(data_dir / "pap" / f"ASP_PAP_{year}.csv")
+    codes = pap["PAP"].str.split("_", expand=True)
+    pap = pap.assign(u=codes.min(axis=1), v=codes.max(axis=1))
+    edges = (pap.groupby(["u", "v"])
+             .agg(passengers=("PAP_PAX", "sum"), distance_km=("PAP_DIST", "first"))
+             .reset_index())
+    apt = node_table(year, data_dir)
+    coords = load_coords()
+    G = nx.Graph(year=year, source="DGAC ASP_PAP / ASP_APT", weight="passengers")
+    for row in edges.itertuples(index=False):
+        G.add_edge(row.u, row.v, passengers=int(row.passengers),
+                   cost=1.0 / row.passengers if row.passengers > 0 else float("inf"),
+                   distance_km=int(row.distance_km))
+    for code, attrs in G.nodes(data=True):
+        french = code in apt.index
+        attrs["french"] = french
+        attrs["icao_region"] = "France" if french else ICAO_REGIONS.get(code[0], "Other")
+        if french:
+            a = apt.loc[code]
+            attrs["name"] = a["apt_name"]
+            attrs["zone"] = "metro" if a["apt_zone"] == "MT" else "overseas"
+            for col in ("apt_passengers", "apt_pax_dep", "apt_pax_arr",
+                        "apt_pax_transit", "apt_movements"):
+                attrs[col] = int(a[col])
+        else:
+            attrs["name"] = coords.at[code, "name"] if code in coords.index else code
+            attrs["zone"] = "foreign"
+    return G
+
+
 def build_graphs(years=(2019, 2020, 2024), data_dir: Path = DATA_DIR) -> dict[int, nx.Graph]:
     """Graphs for several years, keyed by year (for the comparison over time)."""
     return {y: build_graph(y, data_dir) for y in years}
