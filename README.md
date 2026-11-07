@@ -18,7 +18,7 @@ We build a graph of the air routes of French airports from official route statis
 
 | Source | Content | Use |
 | --- | --- | --- |
-| Eurostat [`avia_par_fr`](https://ec.europa.eu/eurostat/databrowser/view/avia_par_fr/default/table), [`avia_par_ch`](https://ec.europa.eu/eurostat/databrowser/view/avia_par_ch/default/table) | Annual passengers carried on each route of the main French airports (and of Bâle-Mulhouse, reported by Switzerland), 2010-2024 | **Edges** (`data/raw/eurostat/eurostat_routes.csv`) |
+| Eurostat [`avia_par_fr`](https://ec.europa.eu/eurostat/databrowser/view/avia_par_fr/default/table), [`avia_par_ch`](https://ec.europa.eu/eurostat/databrowser/view/avia_par_ch/default/table) | Annual passengers carried on each route of the main French airports, 2010-2024 (Bâle-Mulhouse's French and Swiss sectors are declared separately and added) | **Edges** (`data/raw/eurostat/eurostat_routes.csv`) |
 | DGAC [`ASP_APT`](https://www.data.gouv.fr/datasets/trafic-aerien-commercial-mensuel-francais-par-paire-daeroports-par-sens-depuis-1990) | Monthly traffic per French airport, 2010-2024 | Node attributes: name, zone, real airport traffic (`data/raw/apt/`) |
 | DGAC [`ASP_PAP`](https://www.data.gouv.fr/datasets/trafic-aerien-commercial-mensuel-francais-par-paire-daeroports-par-sens-depuis-1990) | Monthly traffic per published airport pair, 2019, 2020, 2024 | Only for the comparison of sources (`data/raw/pap/`) |
 
