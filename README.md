@@ -95,9 +95,9 @@ Requires Python 3.11+. The results in `results/` were produced in a clean virtua
 - **International, long-haul centralisation**: CDG carries 45 % of international passengers but 91 % of long-haul passengers, and 76 foreign destinations are reachable only through CDG.
 - **Two Paris hubs domestically**: the domestic network is decentralised (betweenness centralisation 0.24 vs 0.65); CDG has the most domestic routes, Orly the most domestic passengers.
 - **More than a degree effect**: in degree-preserving random graphs CDG's betweenness is 0.59 (real 0.65, z = 7.4); the network is more hub-and-spoke than chance.
-- **Robust yet fragile**: removing CDG leaves 71 % of the airports in the main component and 57 % of the passengers on surviving routes (CDG + Orly: 65 % and 38 %), against 99.6 % and 99 % for one random removal.
+- **Robust yet fragile**: removing CDG leaves 71 % of the airports in the main component and 57 % of the passengers on surviving routes (CDG + Orly: 65 % and 39 %), against 99.6 % and 99 % for one random removal.
 - **Communities follow business models**: CDG's international group, Orly and the regional airports, a low-cost group (Bâle-Mulhouse, Beauvais), Nice-Bordeaux, the Indian Ocean (modularity 0.28).
-- **Slowly less concentrated**: from 2010 to 2024 the Paris share of passengers fell from 70 % to 62 %; COVID lowered CDG's betweenness (0.70 in 2019, 0.63 in 2020, 0.65 in 2024). Traffic is back to its 2019 level (154.7 M vs 155.6 M).
+- **Slowly less concentrated**: from 2010 to 2024 the Paris share of passengers fell from 70 % to 62 %; COVID lowered CDG's betweenness (0.70 in 2019, 0.63 in 2020, 0.65 in 2024). Traffic is back to its 2019 level (155.0 M vs 155.8 M).
 - **Why Eurostat**: the DGAC published routes capture 43 % of the airports' traffic (Eurostat 89 %); with them, CDG's centrality looks like a pure degree effect and COVID seems to have reinforced CDG, two conclusions that do not hold on the complete data.
 
 ## Team workflow
