@@ -9,9 +9,11 @@ Node attributes of French airports: DGAC airport series ASP_APT
 Graph model (one graph per year):
 - Nodes: airports (ICAO codes), French (metropolitan and overseas) and foreign.
 - Edges: one undirected edge per airport pair with passengers in the year.
-  A route between two reporting airports (e.g. a domestic route) is reported
-  by both of them: the two figures are averaged (they agree within a fraction
-  of a percent). Otherwise the single report is used.
+  Bale-Mulhouse has a French and a Swiss sector, declared separately (French
+  and Swiss data): the two declarations of a route are complementary and are
+  added. Then, a route between two reporting airports (e.g. a domestic route)
+  is reported by both of them: the two figures are averaged (they agree within
+  a fraction of a percent). Otherwise the single report is used.
 - Edge attributes: passengers, cost (= 1/passengers, for shortest paths),
   distance_km (great-circle, from data/external/airport_coords.csv),
   reports (1 or 2).
@@ -128,8 +130,14 @@ def great_circle_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float
 
 
 def edge_table(year: int) -> pd.DataFrame:
-    """One row per undirected airport pair (u < v), reports averaged."""
+    """One row per undirected airport pair (u < v).
+
+    1. Sum the declarations of the same airport across reporting countries
+       (Bale-Mulhouse's French and Swiss sectors are complementary).
+    2. Average the reports of the two ends of a route when both report.
+    """
     r = load_routes(year)
+    r = (r.groupby(["reporting", "partner"], as_index=False)["passengers"].sum())
     r = r.assign(u=r[["reporting", "partner"]].min(axis=1),
                  v=r[["reporting", "partner"]].max(axis=1))
     e = (r.groupby(["u", "v"])
