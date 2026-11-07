@@ -6,8 +6,9 @@
    (unit PAS, tra_meas PAS_CRD), one row per (reporting French airport,
    partner airport). Every route of the reporting airports is published,
    with no minimum number of airlines.
-   Bale-Mulhouse (LFSB) is a French airport reported by Switzerland: its rows
-   are taken from avia_par_ch (reporting code CH_LFSB).
+   Bale-Mulhouse (LFSB) has a French and a Swiss sector, declared separately:
+   the French sector in avia_par_fr (FR_LFSB), the Swiss sector in avia_par_ch
+   (CH_LFSB, most of the traffic). Both are kept; build_graph adds them.
    -> data/raw/eurostat/eurostat_routes.csv
       year, reporting_country, reporting, partner_country, partner, passengers
    Dropped: pairs with an aggregate code that is not an airport (e.g. LF90,
@@ -82,7 +83,7 @@ def _tidy(d: dict, keep) -> tuple[list[dict], dict]:
 
 
 def fetch_eurostat(years=YEARS, path: Path = ROUTES_FILE) -> pd.DataFrame:
-    """French airports (avia_par_fr) + Bale-Mulhouse (avia_par_ch, CH_LFSB)."""
+    """French airports (avia_par_fr) + Bale-Mulhouse's Swiss sector (avia_par_ch, CH_LFSB)."""
     time = "".join(f"&time={y}" for y in years)
     fr = json.loads(_get(API.format(dataset="avia_par_fr") + time))
     ch = json.loads(_get(API.format(dataset="avia_par_ch") + time))
