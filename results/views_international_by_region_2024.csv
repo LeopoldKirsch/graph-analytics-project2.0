@@ -1,0 +1,19 @@
+region,routes,destinations,passengers,cdg_routes,cdg_passenger_share,destinations_only_via_cdg
+Southern Europe & Mediterranean,278,65,50520705,36,0.3082597917032235,2
+Northern Europe,197,49,31346321,33,0.41537946351024735,10
+West & North Africa,52,14,9419576,9,0.31702626530111333,3
+West Africa & Morocco,63,14,9004360,6,0.22964741525216673,2
+United States,24,17,7992025,17,0.906551968994091,12
+Middle East,14,10,4202612,10,0.8577227686020028,8
+Canada,14,6,3346840,6,0.7730563755662058,5
+Southern & Indian Ocean Africa,13,9,2212398,7,0.6000493582077004,4
+South & Southeast Asia,8,7,2206818,7,0.9662446110191235,6
+South America,9,9,2066648,7,0.9102628991487665,7
+East Asia,5,5,1703022,5,1.0,5
+Central America & Mexico,8,7,1452717,5,0.8348301837178198,4
+China,3,3,1269839,3,1.0,3
+East Africa & Egypt,6,4,1160763,3,0.8123329223967338,1
+Iceland / Greenland,2,2,1021892,1,0.3459465383817468,1
+Maritime Southeast Asia,1,1,585185,1,1.0,1
+Russia & Central Asia,2,2,152069,1,0.5922837659220486,1
+Caribbean,1,1,146921,1,1.0,1
