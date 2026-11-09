@@ -35,6 +35,7 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import ConnectionPatch
 
 from build_graph import MAIN_YEAR, build_graph
+from views import domestic_graph
 
 ROOT = Path(__file__).resolve().parents[1]
 EXTERNAL = ROOT / "data" / "external"
@@ -131,7 +132,9 @@ def draw_edges(ax, G, xy, pmax, great=True, alpha=0.55):
     """Hub routes in blue on top of the other routes in grey."""
     for hub_pass in (False, True):
         segs, widths = [], []
-        for u, v, p in G.edges(data="passengers"):
+        # sorted: a subgraph view iterates its nodes as a set, so the drawing
+        # order (and antialiasing where lines overlap) would depend on hashing
+        for u, v, p in sorted((min(u, v), max(u, v), p) for u, v, p in G.edges(data="passengers")):
             if (HUB in (u, v)) != hub_pass:
                 continue
             (x1, y1), (x2, y2) = xy[u], xy[v]
@@ -237,7 +240,10 @@ METRO_EXTENT = (-5.6, 10.0, 41.1, 51.4)
 
 
 def map_french(G, coords, rings, path):
-    F = G.subgraph([n for n, f in G.nodes(data="french") if f]).copy()
+    # domestic_graph builds F in sorted order: G.subgraph() iterates a set, so the
+    # orientation of each edge (and the side the connector arcs bend to) changed
+    # with Python's string hashing from one run to the next
+    F = domestic_graph(G)
     xy = positions(F, coords)
     pmax = max(p for _, _, p in F.edges(data="passengers"))
     smax = max(s for _, s in F.degree(weight="passengers"))
