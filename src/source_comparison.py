@@ -57,11 +57,11 @@ def indicators(G: nx.Graph, null: bool = False) -> dict:
     cent = centrality.centrality_table(G)
     cz = centrality.freeman_centralization(G)
     conc = comparison.concentration(G)
+    # same domestic graph and formula as the domestic view (views.compare_views):
+    # all French airports, including those without a domestic route
     F = views.domestic_graph(G)
-    F.remove_nodes_from(list(nx.isolates(F)))
     fbc = nx.betweenness_centrality(F)
-    fmax = max(fbc.values())
-    dres = views.domestic_resilience(views.domestic_graph(G)).set_index("removed")
+    dres = views.domestic_resilience(F).set_index("removed")
     scen = resilience.scenarios(G, n_random=50).set_index("scenario")
     adaptive = resilience.removal_curve(G, resilience.adaptive_order(G, 10), 10, diameter=False)
     comms = communities.louvain(G, weighted=True)
@@ -77,7 +77,7 @@ def indicators(G: nx.Graph, null: bool = False) -> dict:
         "cdg_betweenness": cent.at["LFPG", "betweenness"],
         "second_betweenness": f"{cent.index[1]} {cent['betweenness'].iloc[1]:.2f}",
         "betweenness_centralization": cz["betweenness_centralization"],
-        "domestic_betweenness_centralization": sum(fmax - b for b in fbc.values()) / (len(F) - 1),
+        "domestic_betweenness_centralization": centrality.freeman_centralization(F)["betweenness_centralization"],
         "domestic_top_betweenness": max(sorted(fbc), key=fbc.get),
         "domestic_kept_without_cdg": dres.at["CDG", "passengers_kept_in_lcc"]
         / dres.at["none", "passengers_kept_in_lcc"],
